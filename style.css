@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=Roboto+Condensed:wght@300&display=swap');
+
+body, html,* {
+    box-sizing: border-box;
+    margin: 0;
+    background-color: black;
+}
+
+h2 {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 3rem;
+    color: yellow;
+    text-align: center;
+    margin: 2rem 1rem 1rem;
+}
+
+.container {
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    height: auto;
+    box-sizing: content-box;
+}
+
+.grid div {
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    background-color: #131313;
+    border-radius: 50%;
+}
+
+.tetro-block {
+    background-color: blue;
+}
+
+.game-info {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: yellow;
+    margin: 1rem 1rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.game-info .game-info__controls button {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: yellow;
+    border: 2px dotted yellow;
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.game-info .game-info__controls button:first-of-type {
+    margin-right: 10px;
+}
+
+.game-info .game-info__controls button:focus {
+    outline: none;
+}
+
+.game-info__hints {
+    font-family: 'Roboto Condensed', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+}
+
+.game-info__hints .left-column,
+.game-info__hints .right-column {
+    display: flex;
+    flex-flow: column;
+}
+
+.game-info__hints .left-column {
+    text-align: right;
+    margin-right: 5px;
+}
