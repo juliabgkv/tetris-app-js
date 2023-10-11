@@ -143,9 +143,11 @@ function startPauseToggle() {
     if(!timer) {
         drawBlock();
         timer = setInterval(moveDown, 1000);
+        grid.classList.remove('paused');
     } else {
         clearInterval(timer);
         timer = null;
+        grid.classList.add('paused');
     }
 }
 
