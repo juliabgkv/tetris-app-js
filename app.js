@@ -12,7 +12,7 @@ const colors = [
     'orange',
     'grey',
     'yellow',
-    'mint'
+    'red'
 ];
 
 const iBlock = [
@@ -90,6 +90,24 @@ function moveDown() {
     undrawBlock();
     currentPosition += cellWidth;
     drawBlock();
+    freeze();
+}
+
+function freeze() {
+    if(currentBlock.some(idx => squaresArr[currentPosition + idx + cellWidth].classList.contains('occupied'))) {
+        currentBlock.map(idx => squaresArr[currentPosition + idx].classList.add('occupied'));
+
+        clearInterval(timer);
+        timer = null;
+
+        currentPosition = 4;
+        randomIdx = Math.floor(Math.random() * tetroBlocks.length);
+        currentBlock = tetroBlocks[randomIdx][currentRotation];
+
+        drawBlock();
+        timer = setInterval(moveDown, 1000);
+
+    }
 }
 
 function moveLeft() {
@@ -125,13 +143,12 @@ function rotateBlock() {
 }
 
 function checkRotation() {
-    const position = currentPosition;
-    if((position + 1) % cellWidth < 4) {
+    if((currentPosition + 1) % cellWidth < 4) {
         if(isOnRightEdge()) {
             currentPosition +=1;
             checkRotation();
         }
-    } else if(position % cellWidth > 4) {
+    } else if(currentPosition % cellWidth > 4) {
         if(isOnLeftEdge()) {
             currentPosition -= 1;
             checkRotation();
