@@ -4,7 +4,8 @@ const startPauseBtn = document.querySelector('#start-pause-button');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
 const cellWidth = 10;
 let score = 0;
-let timer;
+let timer = null;
+let isGameStarted = false;
 const colors = [
     'blue',
     'purple',
@@ -160,26 +161,49 @@ function startPauseToggle() {
     if(!timer) {
         drawBlock();
         timer = setInterval(moveDown, 1000);
-        grid.classList.remove('paused');
     } else {
         clearInterval(timer);
         timer = null;
-        grid.classList.add('paused');
     }
 }
 
-startPauseBtn.addEventListener('click', startPauseToggle);
+function startPauseToggle() {
+    if(timer) {
+        clearInterval(timer);
+        timer = null;
+        grid.classList.add('paused');
+    } else {
+        drawBlock();
+        timer = setInterval(moveDown, 1000);
+        grid.classList.remove('paused');
+    }
+}
+
+startPauseBtn.addEventListener('click', () => {
+    if(!isGameStarted) {
+        isGameStarted = true;
+        drawBlock();
+        timer = setInterval(moveDown, 1000);
+    } else if(isGameStarted) {
+        startPauseToggle();
+    }
+});
 
 document.addEventListener('keydown', (e) => {
-    if(e.key === 'ArrowUp') {
-        rotateBlock();
-    } else if(e.key === 'ArrowDown') {
-        moveDown();
-    } else if(e.key === 'ArrowLeft') {
-        moveLeft();
-    } else if(e.key === 'ArrowRight') {
-        moveRight();
-    } else if(e.key === 'p' || e.key === 'Escape') {
-        startPauseToggle();
+    if(timer) {
+        if(e.key === 'ArrowUp') {
+            rotateBlock();
+        } else if(e.key === 'ArrowDown') {
+            moveDown();
+        } else if(e.key === 'ArrowLeft') {
+            moveLeft();
+        } else if(e.key === 'ArrowRight') {
+            moveRight();
+        }
+    }
+    if(isGameStarted) {
+        if(e.key === 'p' || e.key === 'Escape') {
+            startPauseToggle();
+        }
     }
 }, false);
