@@ -158,16 +158,6 @@ function checkRotation() {
 }
 
 function startPauseToggle() {
-    if(!timer) {
-        drawBlock();
-        timer = setInterval(moveDown, 1000);
-    } else {
-        clearInterval(timer);
-        timer = null;
-    }
-}
-
-function startPauseToggle() {
     if(timer) {
         clearInterval(timer);
         timer = null;
@@ -199,6 +189,9 @@ document.addEventListener('keydown', (e) => {
             moveLeft();
         } else if(e.key === 'ArrowRight') {
             moveRight();
+        } else if(e.code === 'Space') {
+            e.preventDefault();
+            dropBlock();
         }
     }
     if(isGameStarted) {
@@ -207,3 +200,15 @@ document.addEventListener('keydown', (e) => {
         }
     }
 }, false);
+
+function dropBlock() {
+    undrawBlock();
+    
+    while(!currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains('occupied'))) {
+        currentPosition += cellWidth;
+    }
+    currentPosition -=cellWidth;
+
+    drawBlock();
+    freeze();
+}
