@@ -1,11 +1,17 @@
+const OCCUPIED_CLASS = 'occupied';
+const TETRO_BLOCK_CLASS = 'tetro-block';
+const GAME_OVER_CLASS = 'game-over';
+
 const grid = document.querySelector('#grid');
 const scoreElem = document.querySelector('#score');
 const startPauseBtn = document.querySelector('#start-pause-button');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
+
+const mainBackgroundColor = '#131313';
 const cellWidth = 10;
 let score = 0;
 let timer = null;
-let isGameStarted = false;
+let isGameActive = false;
 const colors = [
     'blue',
     'purple',
@@ -75,15 +81,15 @@ let currentBlock = tetroBlocks[randomIdx][currentRotation];
 
 function drawBlock() {
     currentBlock.forEach(cellIndex => {
-        squaresArr[currentPosition + cellIndex].classList.add('tetro-block');
+        squaresArr[currentPosition + cellIndex].classList.add(TETRO_BLOCK_CLASS);
         squaresArr[currentPosition + cellIndex].style.backgroundColor = colors[randomIdx];
     });
 }
 
 function undrawBlock() {
     currentBlock.forEach(cellIndex => {
-        squaresArr[currentPosition + cellIndex].classList.remove('tetro-block');
-        squaresArr[currentPosition + cellIndex].style.backgroundColor = '#131313';
+        squaresArr[currentPosition + cellIndex].classList.remove(TETRO_BLOCK_CLASS);
+        squaresArr[currentPosition + cellIndex].style.backgroundColor = mainBackgroundColor;
     });
 }
 
@@ -95,8 +101,8 @@ function moveDown() {
 }
 
 function freeze() {
-    if(currentBlock.some(idx => squaresArr[currentPosition + idx + cellWidth].classList.contains('occupied'))) {
-        currentBlock.map(idx => squaresArr[currentPosition + idx].classList.add('occupied'));
+    if(currentBlock.some(idx => squaresArr[currentPosition + idx + cellWidth].classList.contains(OCCUPIED_CLASS))) {
+        currentBlock.map(idx => squaresArr[currentPosition + idx].classList.add(OCCUPIED_CLASS));
 
         clearInterval(timer);
         timer = null;
@@ -105,9 +111,40 @@ function freeze() {
         randomIdx = Math.floor(Math.random() * tetroBlocks.length);
         currentBlock = tetroBlocks[randomIdx][currentRotation];
 
-        drawBlock();
-        timer = setInterval(moveDown, 1000);
+        increaseScore();
 
+        checkRows();
+        gameOverCheck();
+
+        if(isGameActive) {
+            drawBlock();
+            timer = setInterval(moveDown, 1000);
+        }
+    }
+}
+
+function increaseScore(points = 10) {
+    score += points;
+    scoreElem.innerHTML = score;
+}
+
+function checkRows() {
+    for(let i = 0; i < 200; i += cellWidth) {
+        const row = [];
+        for(let x = 0; x < 10; x++) {
+            row.push(i + x);
+        }
+
+        if(row.every(idx => squaresArr[idx].classList.contains(OCCUPIED_CLASS))) {
+            increaseScore(100);
+            row.forEach(idx => {
+                squaresArr[idx].className = '';
+                squaresArr[idx].style.backgroundColor = mainBackgroundColor;
+            });
+            const removedSquares = squaresArr.splice(i, 10);
+            squaresArr = removedSquares.concat(squaresArr);
+            squaresArr.forEach(cell => grid.appendChild(cell));
+        }
     }
 }
 
@@ -170,11 +207,19 @@ function startPauseToggle() {
 }
 
 startPauseBtn.addEventListener('click', () => {
-    if(!isGameStarted) {
-        isGameStarted = true;
+    if(!isGameActive) {
+        if(squaresArr.some(square => square.classList.contains(OCCUPIED_CLASS))) {
+            for(let i = 0; i < 200; i++) {
+                squaresArr[i].classList.remove(OCCUPIED_CLASS);
+                squaresArr[i].style.backgroundColor = mainBackgroundColor;
+            }
+        }
+
+        isGameActive = true;
+        grid.classList.remove(GAME_OVER_CLASS);
         drawBlock();
         timer = setInterval(moveDown, 1000);
-    } else if(isGameStarted) {
+    } else if(isGameActive) {
         startPauseToggle();
     }
 });
@@ -194,7 +239,7 @@ document.addEventListener('keydown', (e) => {
             dropBlock();
         }
     }
-    if(isGameStarted) {
+    if (isGameActive) {
         if(e.key === 'p' || e.key === 'Escape') {
             startPauseToggle();
         }
@@ -204,11 +249,21 @@ document.addEventListener('keydown', (e) => {
 function dropBlock() {
     undrawBlock();
     
-    while(!currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains('occupied'))) {
+    while(!currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
         currentPosition += cellWidth;
     }
-    currentPosition -=cellWidth;
-
+    currentPosition -= cellWidth;
+    
     drawBlock();
     freeze();
+}
+
+function gameOverCheck() {
+    if(currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
+        clearInterval(timer);
+        timer = null;
+        
+        grid.classList.add(GAME_OVER_CLASS);
+        isGameActive = false;
+    }
 }
