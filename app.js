@@ -4,12 +4,14 @@ const GAME_OVER_CLASS = 'game-over';
 
 const grid = document.querySelector('#grid');
 const scoreElem = document.querySelector('#score');
+const linesElem = document.querySelector('#lines');
 const startPauseBtn = document.querySelector('#start-pause-button');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
 
 const mainBackgroundColor = '#131313';
 const cellWidth = 10;
 let score = 0;
+let lines = 0;
 let timer = null;
 let isGameActive = false;
 const colors = [
@@ -128,6 +130,11 @@ function increaseScore(points = 10) {
     scoreElem.innerHTML = score;
 }
 
+function increaseLines() {
+    lines += 1;
+    linesElem.innerHTML = lines;
+}
+
 function checkRows() {
     for(let i = 0; i < 200; i += cellWidth) {
         const row = [];
@@ -136,6 +143,7 @@ function checkRows() {
         }
 
         if(row.every(idx => squaresArr[idx].classList.contains(OCCUPIED_CLASS))) {
+            increaseLines();
             increaseScore(100);
             row.forEach(idx => {
                 squaresArr[idx].className = '';
