@@ -7,13 +7,21 @@ const scoreElem = document.querySelector('#score');
 const linesElem = document.querySelector('#lines');
 const startPauseBtn = document.querySelector('#start-pause-button');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
+let miniDisplayArr = Array.from(document.querySelectorAll('#display-next div'));
 
 const mainBackgroundColor = '#131313';
-const cellWidth = 10;
 let score = 0;
 let lines = 0;
 let timer = null;
 let isGameActive = false;
+
+let currentRotation;
+let currentPosition;
+let currentIndex;
+let nextIndex;
+let currentBlock;
+let nextBlock;
+
 const colors = [
     'blue',
     'purple',
@@ -24,6 +32,7 @@ const colors = [
     'red'
 ];
 
+const cellWidth = 10;
 const iBlock = [
     [1, cellWidth+1, cellWidth*2+1, cellWidth*3+1],
     [cellWidth, cellWidth+1, cellWidth+2, cellWidth+3],
@@ -75,16 +84,54 @@ const sBlock = [
 
 const tetroBlocks = [iBlock, oBlock, jBlock, lBlock, zBlock, tBlock, sBlock];
 
-let currentPosition = 4;
-let currentRotation = 0;
+const miniDisplayWidth = 4;
+const miniTetroBlocks = [
+    [1,miniDisplayWidth+1,miniDisplayWidth*2+1,miniDisplayWidth*3+1], //iBlock
+    [0,1,miniDisplayWidth,miniDisplayWidth+1], //oBlock
+    [2,miniDisplayWidth+2,miniDisplayWidth*2+2,miniDisplayWidth*2+1], //jBlock
+    [0,miniDisplayWidth,miniDisplayWidth*2,miniDisplayWidth*2+1], //lBlock
+    [0,1,miniDisplayWidth+1,miniDisplayWidth+2], //zBlock
+    [1,miniDisplayWidth,miniDisplayWidth+1,miniDisplayWidth+2], //tBlock
+    [1,2,miniDisplayWidth,miniDisplayWidth+1] //sBlock
+];
 
-let randomIdx = Math.floor(Math.random() * tetroBlocks.length);
-let currentBlock = tetroBlocks[randomIdx][currentRotation];
+
+setNewCurrentBlock();
+
+function setNewCurrentBlock(nextIdx) {
+    currentPosition = 4;
+    currentRotation = 0;
+    currentIndex = isUndefined(nextIdx) ? getRandomIndex() : nextIdx;
+    currentBlock = tetroBlocks[currentIndex][currentRotation];
+}
+
+function isUndefined(value) {
+    return value === void(0);
+}
+
+function displayNextBlock() {
+    clearMiniDisplay();
+    nextIndex = getRandomIndex();
+    nextBlock = miniTetroBlocks[nextIndex];
+
+    nextBlock.forEach(idx => {
+        let position = (nextIndex === 0) ? 0 : 5; //if next block is I
+        miniDisplayArr[idx +  position].style.backgroundColor = colors[nextIndex];
+    });
+}
+
+function clearMiniDisplay() {
+    miniDisplayArr.forEach(cell => cell.style.backgroundColor = '');
+}
+
+function getRandomIndex() {
+    return Math.floor(Math.random() * tetroBlocks.length);
+}
 
 function drawBlock() {
     currentBlock.forEach(cellIndex => {
         squaresArr[currentPosition + cellIndex].classList.add(TETRO_BLOCK_CLASS);
-        squaresArr[currentPosition + cellIndex].style.backgroundColor = colors[randomIdx];
+        squaresArr[currentPosition + cellIndex].style.backgroundColor = colors[currentIndex];
     });
 }
 
@@ -109,9 +156,7 @@ function freeze() {
         clearInterval(timer);
         timer = null;
 
-        currentPosition = 4;
-        randomIdx = Math.floor(Math.random() * tetroBlocks.length);
-        currentBlock = tetroBlocks[randomIdx][currentRotation];
+        setNewCurrentBlock(nextIndex);
 
         increaseScore();
 
@@ -121,6 +166,7 @@ function freeze() {
         if(isGameActive) {
             drawBlock();
             timer = setInterval(moveDown, 1000);
+            displayNextBlock();
         }
     }
 }
@@ -183,7 +229,7 @@ function isOnRightEdge() {
 function rotateBlock() {
     undrawBlock();
     currentRotation = currentRotation === 3 ? 0 : ++currentRotation;
-    currentBlock = tetroBlocks[randomIdx][currentRotation];
+    currentBlock = tetroBlocks[currentIndex][currentRotation];
     checkRotation();
     drawBlock();
 }
@@ -227,6 +273,8 @@ startPauseBtn.addEventListener('click', () => {
         grid.classList.remove(GAME_OVER_CLASS);
         drawBlock();
         timer = setInterval(moveDown, 1000);
+
+        displayNextBlock();
     } else if(isGameActive) {
         startPauseToggle();
     }

@@ -30,7 +30,8 @@ h2 {
     box-sizing: content-box;
 }
 
-.grid div {
+.grid div,
+.mini-grid div {
     height: 20px;
     width: 20px;
     border: 1px solid black;
@@ -82,15 +83,6 @@ h2 {
     border: 2px yellow solid;
 }
 
-@keyframes floating {
-    0% {
-        transform: translate(-50%, -40%);
-    } 50% {
-        transform: translate(-50%, -60%);
-    } 100% {
-        transform: translate(-50%, -40%);
-    }
-}
 
 .game-info {
     font-family: 'Pixelify Sans', sans-serif;
@@ -99,6 +91,7 @@ h2 {
     font-size: 1.2rem;
     display: flex;
     flex-flow: column;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -119,6 +112,14 @@ h2 {
     outline: none;
 }
 
+.game-info .mini-grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80px;
+    height: 80px;
+    background-color: black;
+}
+
 .game-info__hints {
     font-family: 'Roboto Condensed', sans-serif;
     text-transform: uppercase;
@@ -136,4 +137,14 @@ h2 {
 .game-info__hints .left-column {
     text-align: right;
     margin-right: 5px;
+}
+
+@keyframes floating {
+    0% {
+        transform: translate(-50%, -40%);
+    } 50% {
+        transform: translate(-50%, -60%);
+    } 100% {
+        transform: translate(-50%, -40%);
+    }
 }
