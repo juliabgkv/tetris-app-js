@@ -181,6 +181,12 @@ function increaseLines() {
     linesElem.innerHTML = lines;
 }
 
+function resetPlayerScore() {
+    score = lines = 0;
+    scoreElem.innerHTML = 0;
+    linesElem.innerHTML = 0;
+}
+
 function checkRows() {
     for(let i = 0; i < 200; i += cellWidth) {
         const row = [];
@@ -275,6 +281,7 @@ startPauseBtn.addEventListener('click', () => {
         timer = setInterval(moveDown, 1000);
 
         displayNextBlock();
+        resetPlayerScore();
     } else if(isGameActive) {
         startPauseToggle();
     }
