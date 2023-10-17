@@ -333,7 +333,7 @@ function gameOverCheck() {
 }
 
 controlButtons.addEventListener('click', (e) => {
-    if(isGameActive) {
+    if(isGameActive && timer) {
         if(e.target.classList.contains('rotate-btn')) {
             rotateBlock();
         } else if(e.target.classList.contains('left-btn')) {
