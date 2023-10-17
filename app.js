@@ -144,10 +144,13 @@ function undrawBlock() {
 }
 
 function moveDown() {
-    undrawBlock();
-    currentPosition += cellWidth;
-    drawBlock();
-    freeze();
+    if(!currentBlock.some(idx => squaresArr[idx + currentPosition + cellWidth].classList.contains(OCCUPIED_CLASS))) {
+        undrawBlock();
+        currentPosition += cellWidth;
+        drawBlock();
+    } else {
+        freeze();
+    }
 }
 
 function freeze() {
@@ -210,18 +213,20 @@ function checkRows() {
 }
 
 function moveLeft() {
-    if(!isOnLeftEdge()) {
+    if(!isOnLeftEdge() && !currentBlock.some(idx => squaresArr[idx + currentPosition - 1].classList.contains(OCCUPIED_CLASS))) {
         undrawBlock();
         currentPosition -= 1;
         drawBlock();
+        freeze();
     }
 }
 
 function moveRight() {
-    if(!isOnRightEdge()) {
+    if(!isOnRightEdge() && !currentBlock.some(idx => squaresArr[idx + currentPosition + 1].classList.contains(OCCUPIED_CLASS))) {
         undrawBlock();
         currentPosition += 1;
         drawBlock();
+        freeze();
     }
 }
 
