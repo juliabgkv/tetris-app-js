@@ -4,10 +4,18 @@ body, html,* {
     box-sizing: border-box;
     margin: 0;
     background-color: black;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+html {
+    min-width: 400px;
+}
+
+button {
+    cursor: pointer;
 }
 
 h2 {
-    font-family: 'Pixelify Sans', sans-serif;
     font-size: 3rem;
     color: yellow;
     text-align: center;
@@ -15,7 +23,14 @@ h2 {
 }
 
 .container {
-    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: auto;
+}
+
+.main-game-window {
+    margin: 20px auto;
     display: flex;
     justify-content: center;
 }
@@ -54,10 +69,9 @@ h2 {
     height: 30px;
     padding: 0.5rem 1rem;
     line-height: 30px;
-    font-family: 'Pixelify Sans', sans-serif;
     color: yellow;
     background-color: #131313;
-    border: 2px yellow solid;
+    border: 2px solid yellow;
     animation: floating 3s ease-in-out infinite ;
 }
 
@@ -77,16 +91,14 @@ h2 {
     height: 30px;
     padding: 0.5rem 1rem;
     line-height: 30px;
-    font-family: 'Pixelify Sans', sans-serif;
     color: yellow;
     background-color: #131313;
-    border: 2px yellow solid;
+    border: 2px solid yellow;
 }
 
 .game-info {
-    font-family: 'Pixelify Sans', sans-serif;
     color: yellow;
-    margin: 1rem 1rem;
+    margin: 0 1rem;
     font-size: 1.2rem;
     display: flex;
     flex-flow: column;
@@ -95,16 +107,18 @@ h2 {
 }
 
 .game-info .game-info__controls button {
-    font-family: 'Pixelify Sans', sans-serif;
     color: yellow;
     border: 2px dotted yellow;
     margin: 1rem 0;
     padding: 0.5rem 1rem;
-    cursor: pointer;
+    font-weight: 700;
+    transition: all 100ms ease-in-out;
 }
 
-.game-info .game-info__controls button:first-of-type {
-    margin-right: 10px;
+.game-info .game-info__controls button:hover {
+    border: 2px solid yellow;
+    background-color: yellow;
+    color: black;
 }
 
 .game-info .game-info__controls button:focus {
@@ -136,6 +150,104 @@ h2 {
 .game-info__hints .left-column {
     text-align: right;
     margin-right: 5px;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px;
+}
+
+.circle-buttons {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.circle-buttons .control-button {
+    position: absolute;
+}
+
+.circle-buttons .control-button:nth-child(1) {
+    top: 0;
+    left: calc(100px/2 - 35px/2);
+}
+
+.circle-buttons .control-button:nth-child(2) {
+    left: 0;
+    top: calc(100px/2 - 35px/2);
+}
+
+.circle-buttons .control-button:nth-child(3) {
+    right: 0;
+    top: calc(100px/2 - 35px/2);
+}
+
+.circle-buttons .control-button:nth-child(4) {
+    bottom: 0;
+    left: calc(100px/2 - 35px/2);
+}
+
+.control-button {
+    border: none;
+    background-color: yellow;
+    border-radius: 50%;
+    transition: all 100ms ease-in-out;
+}
+
+.control-button:hover {
+    scale: 1.2;
+    background-color: black;
+    color: yellow
+}
+
+.control-button:not(.drop-btn) {
+    width: 35px;
+    height: 35px;
+    background-size: 15px 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.control-button.drop-btn {
+    width: 50px;
+    height: 50px;
+    font-weight: 700;
+}
+
+.control-button.left-btn,
+.control-button.right-btn {
+    background-image: url('./assets/icons8-up-arrow-50.png');
+}
+
+.control-button.left-btn:hover,
+.control-button.right-btn:hover {
+    background-image: url('./assets/icons8-up-arrow-50-yellow.png');
+}
+
+.control-button.left-btn {
+    rotate: 270deg;
+}
+
+.control-button.right-btn {
+    rotate: 90deg;
+}
+
+.control-button.rotate-btn {
+    background-image: url('./assets/icons8-rotate-50.png');
+}
+
+.control-button.rotate-btn:hover {
+    background-image: url('./assets/icons8-rotate-50-yellow.png');
+}
+
+.control-button.down-btn {
+    background-image: url('./assets/icons8-double-down-50.png');
+}
+
+.control-button.down-btn:hover {
+    background-image: url('./assets/icons8-double-down-50-yellow.png');
 }
 
 @keyframes floating {

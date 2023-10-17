@@ -5,9 +5,10 @@ const GAME_OVER_CLASS = 'game-over';
 const grid = document.querySelector('#grid');
 const scoreElem = document.querySelector('#score');
 const linesElem = document.querySelector('#lines');
-const startPauseBtn = document.querySelector('#start-pause-button');
+const startPauseBtn = document.querySelector('#startPauseButton');
+const controlButtons = document.querySelector('#controlButtons');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
-let miniDisplayArr = Array.from(document.querySelectorAll('#display-next div'));
+let miniDisplayArr = Array.from(document.querySelectorAll('#displayNext div'));
 
 const mainBackgroundColor = '#131313';
 let score = 0;
@@ -330,3 +331,19 @@ function gameOverCheck() {
         isGameActive = false;
     }
 }
+
+controlButtons.addEventListener('click', (e) => {
+    if(isGameActive) {
+        if(e.target.classList.contains('rotate-btn')) {
+            rotateBlock();
+        } else if(e.target.classList.contains('left-btn')) {
+            moveLeft();
+        } else if(e.target.classList.contains('right-btn')) {
+            moveRight();
+        } else if(e.target.classList.contains('down-btn')) {
+            moveDown();
+        } else if(e.target.classList.contains('drop-btn')) {
+            dropBlock();
+        }
+    }
+});
