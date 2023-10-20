@@ -326,8 +326,8 @@ function gameOverCheck() {
     }
 }
 
-function startBlockFalling(time = 1000) {
-    timer = setInterval(moveDown, time);
+function startBlockFalling() {
+    timer = setInterval(moveDown, 1000);
 }
 
 function stopBlockFalling() {
