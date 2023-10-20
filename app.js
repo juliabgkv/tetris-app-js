@@ -5,6 +5,7 @@ const GAME_OVER_CLASS = 'game-over';
 const grid = document.querySelector('#grid');
 const scoreElem = document.querySelector('#score');
 const linesElem = document.querySelector('#lines');
+const recordElem = document.querySelector('#record');
 const startPauseBtn = document.querySelector('#startPauseButton');
 const controlButtons = document.querySelector('#controlButtons');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
@@ -96,8 +97,19 @@ const miniTetroBlocks = [
     [1,2,miniDisplayWidth,miniDisplayWidth+1] //sBlock
 ];
 
-
 setNewCurrentBlock();
+checkRecord();
+
+
+function checkRecord() {
+    if(!localStorage.getItem('record')) {
+        localStorage.setItem('record', 0);
+    }
+    if(score > localStorage.getItem('record')) {
+        localStorage.setItem('record', score);
+    }
+    recordElem.innerHTML = localStorage.getItem('record');
+}
 
 function setNewCurrentBlock(nextIdx) {
     currentPosition = 4;
@@ -162,8 +174,6 @@ function freeze() {
 
         setNewCurrentBlock(nextIndex);
 
-        increaseScore();
-
         checkRows();
         gameOverCheck();
 
@@ -175,7 +185,7 @@ function freeze() {
     }
 }
 
-function increaseScore(points = 10) {
+function increaseScore(points) {
     score += points;
     scoreElem.innerHTML = score;
 }
@@ -192,6 +202,7 @@ function resetPlayerScore() {
 }
 
 function checkRows() {
+    let lines = 0;
     for(let i = 0; i < 200; i += cellWidth) {
         const row = [];
         for(let x = 0; x < 10; x++) {
@@ -199,8 +210,7 @@ function checkRows() {
         }
 
         if(row.every(idx => squaresArr[idx].classList.contains(OCCUPIED_CLASS))) {
-            increaseLines();
-            increaseScore(100);
+            lines += 1;
             row.forEach(idx => {
                 squaresArr[idx].className = '';
                 squaresArr[idx].style.backgroundColor = mainBackgroundColor;
@@ -209,6 +219,20 @@ function checkRows() {
             squaresArr = removedSquares.concat(squaresArr);
             squaresArr.forEach(cell => grid.appendChild(cell));
         }
+    }
+    if(lines) {
+        increaseLines(lines);
+        let points = 0;
+        if(lines === 1) {
+            points = 40;
+        } else if(lines === 2) {
+            points = 100;
+        } else if(lines === 3) {
+            points = 300;
+        } else if(lines === 4) {
+            points = 1200;
+        }
+        increaseScore(points);
     }
 }
 

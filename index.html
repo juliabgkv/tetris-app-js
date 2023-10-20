@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./assets/tetris.png">
 </head>
 <body>
     <h2>Tetris Game</h2>
@@ -224,6 +225,7 @@
             </div>
             <div class="game-info">
                 <div class="game-info__controls">
+                    <div>Top: <span id="record">0</span></div>
                     <div>Score: <span id="score">0</span></div>
                     <div>Lines: <span id="lines">0</span></div>
                     <button id="startPauseButton">Start/Pause</button>
@@ -278,6 +280,7 @@
                 <button class="control-button down-btn"></button>
             </div>
         </div>
+        <a href="https://github.com/juliabgkv/tetris-app-js" class="github-link" target="_blank">Fork on Github</a>
     </div>
     
     <script src="./app.js"></script>

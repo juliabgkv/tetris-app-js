@@ -250,6 +250,33 @@ h2 {
     background-image: url('./assets/icons8-double-down-50-yellow.png');
 }
 
+.github-link {
+    margin: 1rem auto;
+    padding: 3px 0;
+    width: 116px;
+    color: yellow;
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+.github-link:after {
+    display: block;
+    content: "";
+    height: 1px;
+    width: 116px;
+    background-color: yellow;
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    transition: all 500ms ease-in-out;
+}
+
+.github-link:hover:after {
+    left: 0;
+}
+
 @keyframes floating {
     0% {
         transform: translate(-50%, -40%);
