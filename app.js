@@ -188,6 +188,8 @@ function freeze() {
 function increaseScore(points) {
     score += points;
     scoreElem.innerHTML = score;
+    
+    checkRecord();
 }
 
 function increaseLines() {
