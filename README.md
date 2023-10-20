@@ -1,7 +1,7 @@
 
 # Tetris Game
 
-Simple Tetris game with single level, user can control game by buttons on the screen or by keyboard. Scoring system:
+Simple Tetris game with single level, user can control game by buttons on the screen or by keyboard. Top score is saving in localStorage. Scoring system:
 
 
 | Points for 1 line | Points for 2 lines | Points for 3 lines |  Points for 4 lines |
