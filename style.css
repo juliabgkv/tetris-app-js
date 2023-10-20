@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=Roboto+Condensed:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700');
 
 body, html,* {
     box-sizing: border-box;
@@ -45,6 +45,10 @@ h2 {
     box-sizing: content-box;
 }
 
+.grid.drop {
+    animation: drop 100ms ease-in-out;
+}
+
 .grid div,
 .mini-grid div {
     height: 20px;
@@ -72,7 +76,7 @@ h2 {
     color: yellow;
     background-color: #131313;
     border: 2px solid yellow;
-    animation: floating 3s ease-in-out infinite ;
+    animation: floating 3s ease-in-out infinite;
 }
 
 .grid.game-over {
@@ -134,7 +138,6 @@ h2 {
 }
 
 .game-info__hints {
-    font-family: 'Roboto Condensed', sans-serif;
     text-transform: uppercase;
     font-size: 0.8rem;
     display: flex;
@@ -284,5 +287,15 @@ h2 {
         transform: translate(-50%, -60%);
     } 100% {
         transform: translate(-50%, -40%);
+    }
+}
+
+@keyframes drop {
+    0% {
+        transform: translateY(0);
+    } 50% {
+        transform: translateY(3px);
+    } 100% {
+        transform: translateY(0);
     }
 }

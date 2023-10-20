@@ -1,6 +1,7 @@
 const OCCUPIED_CLASS = 'occupied';
 const TETRO_BLOCK_CLASS = 'tetro-block';
 const GAME_OVER_CLASS = 'game-over';
+const PAUSED_CLASS = 'paused';
 
 const grid = document.querySelector('#grid');
 const scoreElem = document.querySelector('#score');
@@ -13,7 +14,7 @@ let miniDisplayArr = Array.from(document.querySelectorAll('#displayNext div'));
 
 const mainBackgroundColor = '#131313';
 let score = 0;
-let lines = 0;
+let lines = 10;
 let timer = null;
 let isGameActive = false;
 
@@ -169,8 +170,7 @@ function freeze() {
     if(currentBlock.some(idx => squaresArr[currentPosition + idx + cellWidth].classList.contains(OCCUPIED_CLASS))) {
         currentBlock.map(idx => squaresArr[currentPosition + idx].classList.add(OCCUPIED_CLASS));
 
-        clearInterval(timer);
-        timer = null;
+        stopBlockFalling();
 
         setNewCurrentBlock(nextIndex);
 
@@ -179,7 +179,7 @@ function freeze() {
 
         if(isGameActive) {
             drawBlock();
-            timer = setInterval(moveDown, 1000);
+            startBlockFalling();
             displayNextBlock();
         }
     }
@@ -202,7 +202,7 @@ function resetPlayerScore() {
 }
 
 function checkRows() {
-    let lines = 0;
+    let linesCounter = 0;
     for(let i = 0; i < 200; i += cellWidth) {
         const row = [];
         for(let x = 0; x < 10; x++) {
@@ -210,7 +210,7 @@ function checkRows() {
         }
 
         if(row.every(idx => squaresArr[idx].classList.contains(OCCUPIED_CLASS))) {
-            lines += 1;
+            linesCounter += 1;
             row.forEach(idx => {
                 squaresArr[idx].className = '';
                 squaresArr[idx].style.backgroundColor = mainBackgroundColor;
@@ -220,20 +220,27 @@ function checkRows() {
             squaresArr.forEach(cell => grid.appendChild(cell));
         }
     }
-    if(lines) {
-        increaseLines(lines);
-        let points = 0;
-        if(lines === 1) {
-            points = 40;
-        } else if(lines === 2) {
-            points = 100;
-        } else if(lines === 3) {
-            points = 300;
-        } else if(lines === 4) {
-            points = 1200;
-        }
+    if(linesCounter) {
+        increaseLines(linesCounter);
+
+        const points = countPoints(linesCounter);
         increaseScore(points);
     }
+}
+
+function countPoints(lines) {
+    let points = 0;
+
+    if(lines === 1)
+        points = 40;
+    else if(lines === 2)
+        points = 100;
+    else if(lines === 3)
+        points = 300;
+    else if(lines === 4)
+        points = 1200;
+
+    return points;
 }
 
 function moveLeft() {
@@ -286,14 +293,46 @@ function checkRotation() {
 
 function startPauseToggle() {
     if(timer) {
-        clearInterval(timer);
-        timer = null;
-        grid.classList.add('paused');
+        stopBlockFalling();
+        grid.classList.add(PAUSED_CLASS);
     } else {
         drawBlock();
-        timer = setInterval(moveDown, 1000);
-        grid.classList.remove('paused');
+        startBlockFalling();
+        grid.classList.remove(PAUSED_CLASS);
     }
+}
+
+function dropBlock() {
+    undrawBlock();
+    
+    while(!currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
+        currentPosition += cellWidth;
+    }
+    currentPosition -= cellWidth;
+    
+    grid.classList.add('drop');
+    setTimeout(() => grid.classList.remove('drop'), 100);
+
+    drawBlock();
+    freeze();
+}
+
+function gameOverCheck() {
+    if(currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
+        stopBlockFalling();
+        
+        grid.classList.add(GAME_OVER_CLASS);
+        isGameActive = false;
+    }
+}
+
+function startBlockFalling(time = 1000) {
+    timer = setInterval(moveDown, time);
+}
+
+function stopBlockFalling() {
+    clearInterval(timer);
+    timer = null;
 }
 
 startPauseBtn.addEventListener('click', () => {
@@ -308,12 +347,28 @@ startPauseBtn.addEventListener('click', () => {
         isGameActive = true;
         grid.classList.remove(GAME_OVER_CLASS);
         drawBlock();
-        timer = setInterval(moveDown, 1000);
+        startBlockFalling();
 
         displayNextBlock();
         resetPlayerScore();
     } else if(isGameActive) {
         startPauseToggle();
+    }
+});
+
+controlButtons.addEventListener('click', (e) => {
+    if(isGameActive && timer) {
+        if(e.target.classList.contains('rotate-btn')) {
+            rotateBlock();
+        } else if(e.target.classList.contains('left-btn')) {
+            moveLeft();
+        } else if(e.target.classList.contains('right-btn')) {
+            moveRight();
+        } else if(e.target.classList.contains('down-btn')) {
+            moveDown();
+        } else if(e.target.classList.contains('drop-btn')) {
+            dropBlock();
+        }
     }
 });
 
@@ -338,41 +393,3 @@ document.addEventListener('keydown', (e) => {
         }
     }
 }, false);
-
-function dropBlock() {
-    undrawBlock();
-    
-    while(!currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
-        currentPosition += cellWidth;
-    }
-    currentPosition -= cellWidth;
-    
-    drawBlock();
-    freeze();
-}
-
-function gameOverCheck() {
-    if(currentBlock.some(idx => squaresArr[currentPosition + idx].classList.contains(OCCUPIED_CLASS))) {
-        clearInterval(timer);
-        timer = null;
-        
-        grid.classList.add(GAME_OVER_CLASS);
-        isGameActive = false;
-    }
-}
-
-controlButtons.addEventListener('click', (e) => {
-    if(isGameActive && timer) {
-        if(e.target.classList.contains('rotate-btn')) {
-            rotateBlock();
-        } else if(e.target.classList.contains('left-btn')) {
-            moveLeft();
-        } else if(e.target.classList.contains('right-btn')) {
-            moveRight();
-        } else if(e.target.classList.contains('down-btn')) {
-            moveDown();
-        } else if(e.target.classList.contains('drop-btn')) {
-            dropBlock();
-        }
-    }
-});
