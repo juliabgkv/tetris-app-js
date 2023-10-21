@@ -299,3 +299,39 @@ h2 {
         transform: translateY(0);
     }
 }
+
+@media (max-width: 400px) {
+    .main-game-window {
+        margin: 10px auto;
+    }
+    .game-info {
+        margin-right: 0;
+    }
+    .game-info__hints {
+        display: none;
+    }
+    .control-button.drop-btn {
+        width: 60px;
+        height: 60px;
+    }
+    .circle-buttons {
+        width: 120px;
+        height: 120px;
+    }
+    .control-button:not(.drop-btn) {
+        width: 40px;
+        height: 40px;
+    }
+    .circle-buttons .control-button:nth-child(1) {
+        left: calc(120px/2 - 40px/2);
+    }
+    .circle-buttons .control-button:nth-child(2) {
+        top: calc(120px/2 - 40px/2);
+    }
+    .circle-buttons .control-button:nth-child(3) {
+        top: calc(120px/2 - 40px/2);
+    }
+    .circle-buttons .control-button:nth-child(4) {
+        left: calc(120px/2 - 40px/2);
+    }
+}
