@@ -3,12 +3,12 @@ const TETRO_BLOCK_CLASS = 'tetro-block';
 const GAME_OVER_CLASS = 'game-over';
 const PAUSED_CLASS = 'paused';
 
-const grid = document.querySelector('#grid');
-const scoreElem = document.querySelector('#score');
-const linesElem = document.querySelector('#lines');
-const recordElem = document.querySelector('#record');
-const startPauseBtn = document.querySelector('#startPauseButton');
-const controlButtons = document.querySelector('#controlButtons');
+const grid = document.getElementById('grid');
+const scoreElem = document.getElementById('score');
+const linesElem = document.getElementById('lines');
+const recordElem = document.getElementById('record');
+const startPauseBtn = document.getElementById('startPauseButton');
+const controlButtons = document.getElementById('controlButtons');
 let squaresArr = Array.from(document.querySelectorAll('#grid div'));
 let miniDisplayArr = Array.from(document.querySelectorAll('#displayNext div'));
 
